@@ -17,7 +17,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Hexlet\\Code\\": "src/"
+            "Differ\\": "src/"
         },
     "files": [
         "src/Parser.php",
@@ -41,3 +41,4 @@
         "psy/psysh": "^0.11"
     }
 }
+
