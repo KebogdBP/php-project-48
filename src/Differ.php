@@ -4,32 +4,41 @@ namespace Differ\Differ;
 
 use function Hexlet\Code\parseFile;
 use function Functional\sort;
+use function Differ\Formatters\format;
 
-function genDiff(string $pathToFile1, string $pathToFile2): string
+function buildDiff(object $data1, object $data2): array
 {
-    $data1 = get_object_vars(parseFile($pathToFile1));
-    $data2 = get_object_vars(parseFile($pathToFile2));
+    $keys1 = array_keys(get_object_vars($data1));
+    $keys2 = array_keys(get_object_vars($data2));
+    $allKeys = array_unique(array_merge($keys1, $keys2));
+    $sorted = sort($allKeys, fn($a, $b) => strcmp($a, $b));
 
-    $allKeys = array_keys(array_merge($data1, $data2));
-    $sortedKeys = sort($allKeys, fn($a, $b) => strcmp($a, $b));
+    return array_map(function ($key) use ($data1, $data2) {
+        $has1 = property_exists($data1, $key);
+        $has2 = property_exists($data2, $key);
+        $val1 = $has1 ? $data1->$key : null;
+        $val2 = $has2 ? $data2->$key : null;
 
-    $lines = array_map(function ($key) use ($data1, $data2) {
-        $val1 = $data1[$key] ?? null;
-        $val2 = $data2[$key] ?? null;
-
-        $toString = fn($val) => is_bool($val) ? ($val ? 'true' : 'false') : (string)$val;
-
-        if (!array_key_exists($key, $data2)) {
-            return "  - {$key}: {$toString($val1)}";
+        if ($has1 && $has2 && is_object($val1) && is_object($val2)) {
+            return ['key' => $key, 'type' => 'nested', 'children' => buildDiff($val1, $val2)];
         }
-        if (!array_key_exists($key, $data1)) {
-            return "  + {$key}: {$toString($val2)}";
+        if (!$has2) {
+            return ['key' => $key, 'type' => 'removed', 'value' => $val1];
+        }
+        if (!$has1) {
+            return ['key' => $key, 'type' => 'added', 'value' => $val2];
         }
         if ($val1 === $val2) {
-            return "    {$key}: {$toString($val1)}";
+            return ['key' => $key, 'type' => 'unchanged', 'value' => $val1];
         }
-        return "  - {$key}: {$toString($val1)}\n  + {$key}: {$toString($val2)}";
-    }, $sortedKeys);
+        return ['key' => $key, 'type' => 'changed', 'oldValue' => $val1, 'newValue' => $val2];
+    }, $sorted);
+}
 
-    return "{\n" . implode("\n", $lines) . "\n}";
+function genDiff(string $pathToFile1, string $pathToFile2, string $formatName = 'stylish'): string
+{
+    $data1 = parseFile($pathToFile1);
+    $data2 = parseFile($pathToFile2);
+    $diff = buildDiff($data1, $data2);
+    return format($diff, $formatName);
 }

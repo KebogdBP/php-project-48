@@ -19,9 +19,13 @@
             "Hexlet\\Code\\": "src/"
         },
     "files": [
-            "src/Parser.php",
-	    "src/Differ.php"
-    ]
+        "src/Parser.php",
+    	"src/Differ.php",
+	"src/Formatters.php",
+    	"src/Formatters/Stylish.php",
+    	"src/Formatters/Plain.php",
+    	"src/Formatters/Json.php"
+]
     },
     "bin": [
         "bin/gendiff"

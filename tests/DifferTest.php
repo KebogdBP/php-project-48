@@ -13,32 +13,71 @@ class DifferTest extends TestCase
         return __DIR__ . '/fixtures/' . $filename;
     }
 
-    private function getExpected(): string
+    private function getExpected(string $filename): string
     {
-        return trim(file_get_contents($this->getFixturePath('expected_flat.txt')));
+        return trim(file_get_contents($this->getFixturePath($filename)));
     }
 
-    public function testGenDiffFlatJson(): void
+    public function testDefaultWithJsonFiles(): void
     {
-        $file1 = $this->getFixturePath('file1.json');
-        $file2 = $this->getFixturePath('file2.json');
-
-        $this->assertEquals($this->getExpected(), genDiff($file1, $file2));
+        $this->assertEquals(
+            $this->getExpected('expected_stylish.txt'),
+            genDiff($this->getFixturePath('file1.json'), $this->getFixturePath('file2.json'))
+        );
     }
 
-    public function testGenDiffFlatYaml(): void
+    public function testDefaultWithYamlFiles(): void
     {
-        $file1 = $this->getFixturePath('file1.yml');
-        $file2 = $this->getFixturePath('file2.yml');
-
-        $this->assertEquals($this->getExpected(), genDiff($file1, $file2));
+        $this->assertEquals(
+            $this->getExpected('expected_stylish.txt'),
+            genDiff($this->getFixturePath('file1.yml'), $this->getFixturePath('file2.yml'))
+        );
     }
 
-    public function testGenDiffMixed(): void
+    public function testStylishWithJsonFiles(): void
     {
-        $file1 = $this->getFixturePath('file1.json');
-        $file2 = $this->getFixturePath('file2.yml');
+        $this->assertEquals(
+            $this->getExpected('expected_stylish.txt'),
+            genDiff($this->getFixturePath('file1.json'), $this->getFixturePath('file2.json'), 'stylish')
+        );
+    }
 
-        $this->assertEquals($this->getExpected(), genDiff($file1, $file2));
+    public function testStylishWithYamlFiles(): void
+    {
+        $this->assertEquals(
+            $this->getExpected('expected_stylish.txt'),
+            genDiff($this->getFixturePath('file1.yml'), $this->getFixturePath('file2.yml'), 'stylish')
+        );
+    }
+
+    public function testPlainWithJsonFiles(): void
+    {
+        $this->assertEquals(
+            $this->getExpected('expected_plain.txt'),
+            genDiff($this->getFixturePath('file1.json'), $this->getFixturePath('file2.json'), 'plain')
+        );
+    }
+
+    public function testPlainWithYamlFiles(): void
+    {
+        $this->assertEquals(
+            $this->getExpected('expected_plain.txt'),
+            genDiff($this->getFixturePath('file1.yml'), $this->getFixturePath('file2.yml'), 'plain')
+        );
+    }
+    public function testJsonWithJsonFiles(): void
+    {
+        $this->assertEquals(
+            $this->getExpected('expected_json.txt'),
+            genDiff($this->getFixturePath('file1.json'), $this->getFixturePath('file2.json'), 'json')
+        );
+    }
+
+    public function testJsonWithYamlFiles(): void
+    {
+        $this->assertEquals(
+            $this->getExpected('expected_json.txt'),
+            genDiff($this->getFixturePath('file1.yml'), $this->getFixturePath('file2.yml'), 'json')
+        );
     }
 }
