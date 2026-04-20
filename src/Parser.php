@@ -2,6 +2,8 @@
 
 namespace Hexlet\Code;
 
+use Symfony\Component\Yaml\Yaml;
+
 function parseFile(string $filePath): object
 {
     $realPath = realpath($filePath);
@@ -11,5 +13,11 @@ function parseFile(string $filePath): object
     }
 
     $content = file_get_contents($realPath);
-    return json_decode($content);
+    $extension = pathinfo($realPath, PATHINFO_EXTENSION);
+
+    return match ($extension) {
+        'json' => json_decode($content),
+        'yml', 'yaml' => Yaml::parse($content, Yaml::PARSE_OBJECT_FOR_MAP),
+        default => throw new \Exception("Unsupported format: {$extension}")
+    };
 }

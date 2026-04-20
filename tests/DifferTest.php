@@ -13,12 +13,32 @@ class DifferTest extends TestCase
         return __DIR__ . '/fixtures/' . $filename;
     }
 
+    private function getExpected(): string
+    {
+        return trim(file_get_contents($this->getFixturePath('expected_flat.txt')));
+    }
+
     public function testGenDiffFlatJson(): void
     {
         $file1 = $this->getFixturePath('file1.json');
         $file2 = $this->getFixturePath('file2.json');
-        $expected = trim(file_get_contents($this->getFixturePath('expected_flat.txt')));
 
-        $this->assertEquals($expected, genDiff($file1, $file2));
+        $this->assertEquals($this->getExpected(), genDiff($file1, $file2));
+    }
+
+    public function testGenDiffFlatYaml(): void
+    {
+        $file1 = $this->getFixturePath('file1.yml');
+        $file2 = $this->getFixturePath('file2.yml');
+
+        $this->assertEquals($this->getExpected(), genDiff($file1, $file2));
+    }
+
+    public function testGenDiffMixed(): void
+    {
+        $file1 = $this->getFixturePath('file1.json');
+        $file2 = $this->getFixturePath('file2.yml');
+
+        $this->assertEquals($this->getExpected(), genDiff($file1, $file2));
     }
 }

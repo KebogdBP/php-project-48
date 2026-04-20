@@ -24,5 +24,8 @@ test-coverage:
 test-coverage-text:
 	XDEBUG_MODE=coverage composer exec --verbose phpunit tests -- --coverage-text
 
+gendiff -h:
+	 ./bin/gendiff -h
+
 asciinema:
 	asciinema rec

@@ -11,7 +11,8 @@
     "require": {
         "php": ">=8.1",
         "docopt/docopt": "^1.0",
-        "lstrojny/functional-php": "^1.18"
+        "lstrojny/functional-php": "^1.18",
+        "symfony/yaml": "^8.0"
     },
     "autoload": {
         "psr-4": {
