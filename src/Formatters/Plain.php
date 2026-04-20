@@ -13,6 +13,9 @@ function toPlainString(mixed $val): string
     if (is_object($val) || is_array($val)) {
         return '[complex value]';
     }
+    if (is_int($val) || is_float($val)) {
+        return (string)$val;
+    }
     return "'{$val}'";
 }
 
