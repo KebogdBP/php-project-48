@@ -38,6 +38,7 @@ function formatNode(array $node, int $depth): string
         'unchanged' => "{$indent}    {$key}: " . valueToString($node['value'], $depth + 1),
         'changed'   => "{$indent}  - {$key}: " . valueToString($node['oldValue'], $depth + 1)
             . "\n{$indent}  + {$key}: " . valueToString($node['newValue'], $depth + 1),
+        default => "{$indent}    {$key}: [unknown]",
     };
 }
 

@@ -4,7 +4,7 @@ namespace Hexlet\Code;
 
 use Symfony\Component\Yaml\Yaml;
 
-function parseFile(string $filePath): object
+function parseFile(string $filePath): mixed
 {
     $realPath = realpath($filePath);
 

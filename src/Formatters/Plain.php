@@ -36,6 +36,7 @@ function formatNode(array $node, string $path): string
         'changed'   => "Property '{$currentPath}' was updated. From "
             . toPlainString($node['oldValue']) . " to " . toPlainString($node['newValue']),
         'unchanged' => '',
+        default => '',
     };
 }
 
