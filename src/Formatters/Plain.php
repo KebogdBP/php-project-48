@@ -21,7 +21,7 @@ function toPlainString(mixed $val): string
 
 function formatNode(array $node, string $path): string
 {
-    $currentPath = $path ? "{$path}.{$node['key']}" : $node['key'];
+    $currentPath = ($path !== '') ? "{$path}.{$node['key']}" : $node['key'];
 
     return match ($node['type']) {
         'nested' => implode(
@@ -36,7 +36,6 @@ function formatNode(array $node, string $path): string
         'changed'   => "Property '{$currentPath}' was updated. From "
             . toPlainString($node['oldValue']) . " to " . toPlainString($node['newValue']),
         'unchanged' => '',
-        default => '',
     };
 }
 

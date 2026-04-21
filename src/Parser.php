@@ -4,7 +4,7 @@ namespace Hexlet\Code;
 
 use Symfony\Component\Yaml\Yaml;
 
-function parseFile(string $filePath): mixed
+function parseFile(string $filePath): object
 {
     $realPath = realpath($filePath);
 
@@ -13,6 +13,11 @@ function parseFile(string $filePath): mixed
     }
 
     $content = file_get_contents($realPath);
+
+    if ($content === false) {
+        throw new \Exception("Cannot read file: {$filePath}");
+    }
+
     $extension = pathinfo($realPath, PATHINFO_EXTENSION);
 
     return match ($extension) {
